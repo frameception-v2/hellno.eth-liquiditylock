@@ -8,8 +8,8 @@ import sdk, {
 } from "@farcaster/frame-sdk";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
-import { ethers } from "ethers";
+import { useContractWrite, useWaitForTransactionReceipt } from "wagmi";
+import { parseEther } from "viem";
 import { CONTRACT_ADDRESS, LIQUIDITY_LOCK_ABI, WETH_ADDRESS } from "~/lib/constants";
 
 import { config } from "~/components/providers/WagmiProvider";
@@ -23,18 +23,21 @@ import { PROJECT_TITLE } from "~/lib/constants";
 
 function LiquidityLockCard() {
   const [ethAmount, setEthAmount] = useState("");
-  const { config } = usePrepareContractWrite({
-    address: CONTRACT_ADDRESS,
-    abi: LIQUIDITY_LOCK_ABI,
-    functionName: 'donate',
-    args: [WETH_ADDRESS, ethAmount ? ethers.utils.parseEther(ethAmount) : "0"],
-    enabled: !!ethAmount,
+  const { data: hash, writeContract, isPending } = useContractWrite();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ 
+    hash,
   });
 
-  const { data, write } = useContractWrite(config);
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  });
+  const handleLock = () => {
+    if (ethAmount) {
+      writeContract({
+        address: CONTRACT_ADDRESS,
+        abi: LIQUIDITY_LOCK_ABI,
+        functionName: 'donate',
+        args: [WETH_ADDRESS, parseEther(ethAmount)],
+      });
+    }
+  };
 
   const handleLock = () => {
     if (ethAmount && write) {
@@ -69,7 +72,7 @@ function LiquidityLockCard() {
           onClick={handleLock}
           disabled={!ethAmount || isLoading}
         >
-          {isLoading ? 'Locking...' : 'Lock Liquidity'}
+          {isPending || isConfirming ? 'Locking...' : 'Lock Liquidity'}
         </PurpleButton>
 
         {isSuccess && (
