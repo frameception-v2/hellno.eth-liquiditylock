@@ -5,11 +5,13 @@ export async function GET() {
 
   const config = {
     accountAssociation: {
-      header:
-        "eyJmaWQiOjM2MjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgyY2Q4NWEwOTMyNjFmNTkyNzA4MDRBNkVBNjk3Q2VBNENlQkVjYWZFIn0",
-      payload: "eyJkb21haW4iOiJmcmFtZXMtdjIudmVyY2VsLmFwcCJ9",
-      signature:
-        "MHhiNDIwMzQ1MGZkNzgzYTExZjRiOTllZTFlYjA3NmMwOTdjM2JkOTY1NGM2ODZjYjkyZTAyMzk2Y2Q0YjU2MWY1MjY5NjI5ZGQ5NTliYjU0YzEwOGI4OGVmNjdjMTVlZTdjZDc2YTRiMGU5NzkzNzA3YzkxYzFkOWFjNTg0YmQzNjFi",
+      message: {
+        domain: "hellno.eth-liquiditylock.vercel.app",
+        timestamp: 1737379154,
+        expirationTime: 1745155154
+      },
+      signature: "325f3ebc0634f2009e940f34bc7b1466daa5c902ed78a8e421e917514091b0814c79a1c99677752492952cb91946a19a74da8cd11be83d36e76b437d69f9d8c81b",
+      signingKey: "c2d85e0d152f0ecf9f592be170654eb8ecc291b8d185850513b753e5d6817c23"
     },
     frame: {
       version: "1",
