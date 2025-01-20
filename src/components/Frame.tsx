@@ -24,6 +24,7 @@ import { PROJECT_TITLE } from "~/lib/constants";
 function LiquidityLockCard() {
   const [ethAmount, setEthAmount] = useState("");
   const { data: hash, writeContract, isPending } = useContractWrite({
+    config,
     address: CONTRACT_ADDRESS,
     abi: LIQUIDITY_LOCK_ABI,
   });
@@ -33,7 +34,7 @@ function LiquidityLockCard() {
 
   const handleLock = () => {
     if (ethAmount) {
-      writeContract({
+      writeContract({ 
         address: CONTRACT_ADDRESS,
         abi: LIQUIDITY_LOCK_ABI,
         functionName: 'donate',
