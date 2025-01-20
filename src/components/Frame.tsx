@@ -39,12 +39,6 @@ function LiquidityLockCard() {
     }
   };
 
-  const handleLock = () => {
-    if (ethAmount && write) {
-      write();
-    }
-  };
-
   return (
     <Card className="border-neutral-200 bg-white">
       <CardHeader>
