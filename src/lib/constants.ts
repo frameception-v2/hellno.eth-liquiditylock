@@ -1,6 +1,6 @@
-export const PROJECT_ID = 'farcaster-frames-template';
-export const PROJECT_TITLE = "LiquidityLock Frame";
-export const PROJECT_DESCRIPTION = "Lock liquidity and earn rewards";
+export const PROJECT_ID = 'LiquidityLock';
+export const PROJECT_TITLE = "LiquidityLock";
+export const PROJECT_DESCRIPTION = "Secure your liquidity, maximize your rewards";
 
 // LiquidityLock contract details
 export const CONTRACT_ADDRESS = "0x719Fdd695Be2b410a22D0F3AC87151e09f069e33"; // Base Mainnet contract address
