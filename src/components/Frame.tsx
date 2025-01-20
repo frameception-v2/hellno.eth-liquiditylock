@@ -24,10 +24,8 @@ import { PROJECT_TITLE } from "~/lib/constants";
 function LiquidityLockCard() {
   const [ethAmount, setEthAmount] = useState("");
   const { data: hash, writeContract, isPending } = useContractWrite({
-    mutation: {
-      address: CONTRACT_ADDRESS,
-      abi: LIQUIDITY_LOCK_ABI,
-    }
+    address: CONTRACT_ADDRESS,
+    abi: LIQUIDITY_LOCK_ABI,
   });
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ 
     hash,
