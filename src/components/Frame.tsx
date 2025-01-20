@@ -64,7 +64,7 @@ function LiquidityLockCard() {
         
         <PurpleButton
           onClick={handleLock}
-          disabled={!ethAmount || isLoading}
+          disabled={!ethAmount || isPending}
         >
           {isPending || isConfirming ? 'Locking...' : 'Lock Liquidity'}
         </PurpleButton>
