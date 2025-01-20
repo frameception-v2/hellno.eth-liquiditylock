@@ -7,6 +7,10 @@ import sdk, {
   type Context,
 } from "@farcaster/frame-sdk";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
+import { ethers } from "ethers";
+import { CONTRACT_ADDRESS, LIQUIDITY_LOCK_ABI, WETH_ADDRESS } from "~/lib/constants";
 
 import { config } from "~/components/providers/WagmiProvider";
 import { PurpleButton } from "~/components/ui/PurpleButton";
@@ -17,19 +21,62 @@ import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
 import { PROJECT_TITLE } from "~/lib/constants";
 
-function ExampleCard() {
+function LiquidityLockCard() {
+  const [ethAmount, setEthAmount] = useState("");
+  const { config } = usePrepareContractWrite({
+    address: CONTRACT_ADDRESS,
+    abi: LIQUIDITY_LOCK_ABI,
+    functionName: 'donate',
+    args: [WETH_ADDRESS, ethAmount ? ethers.utils.parseEther(ethAmount) : "0"],
+    enabled: !!ethAmount,
+  });
+
+  const { data, write } = useContractWrite(config);
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
+  const handleLock = () => {
+    if (ethAmount && write) {
+      write();
+    }
+  };
+
   return (
     <Card className="border-neutral-200 bg-white">
       <CardHeader>
-        <CardTitle className="text-neutral-900">Welcome to the Frame Template</CardTitle>
+        <CardTitle className="text-neutral-900">Lock Liquidity</CardTitle>
         <CardDescription className="text-neutral-600">
-          This is an example card that you can customize or remove
+          Lock ETH to earn HIGHER rewards
         </CardDescription>
       </CardHeader>
-      <CardContent className="text-neutral-800">
-        <p>
-          Your frame content goes here. The text is intentionally dark to ensure good readability.
-        </p>
+      <CardContent className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="ethAmount" className="text-neutral-800">
+            ETH Amount
+          </Label>
+          <Input
+            id="ethAmount"
+            type="number"
+            value={ethAmount}
+            onChange={(e) => setEthAmount(e.target.value)}
+            placeholder="Enter ETH amount"
+            className="bg-white"
+          />
+        </div>
+        
+        <PurpleButton
+          onClick={handleLock}
+          disabled={!ethAmount || isLoading}
+        >
+          {isLoading ? 'Locking...' : 'Lock Liquidity'}
+        </PurpleButton>
+
+        {isSuccess && (
+          <div className="text-green-600 text-sm">
+            Success! Liquidity locked.
+          </div>
+        )}
       </CardContent>
     </Card>
   );
@@ -137,7 +184,7 @@ export default function Frame(
     >
       <div className="w-[300px] mx-auto py-2 px-2">
         <h1 className="text-2xl font-bold text-center mb-4 text-neutral-900">{title}</h1>
-        <ExampleCard />
+        <LiquidityLockCard />
       </div>
     </div>
   );
