@@ -9,7 +9,6 @@ import sdk, {
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { useContractWrite, useWaitForTransactionReceipt } from "wagmi";
-import { config } from "~/components/providers/WagmiProvider";
 import { parseEther } from "viem";
 import { CONTRACT_ADDRESS, LIQUIDITY_LOCK_ABI, WETH_ADDRESS } from "~/lib/constants";
 
@@ -25,9 +24,10 @@ import { PROJECT_TITLE } from "~/lib/constants";
 function LiquidityLockCard() {
   const [ethAmount, setEthAmount] = useState("");
   const { data: hash, writeContract, isPending } = useContractWrite({
-    config,
-    address: CONTRACT_ADDRESS,
-    abi: LIQUIDITY_LOCK_ABI,
+    mutation: {
+      address: CONTRACT_ADDRESS,
+      abi: LIQUIDITY_LOCK_ABI,
+    }
   });
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ 
     hash,
